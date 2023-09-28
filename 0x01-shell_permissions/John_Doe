@@ -1,0 +1,2 @@
+#!/ban/bash
+umask 024 hello
