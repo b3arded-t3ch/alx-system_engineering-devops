@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# Configures Nginx to have a custom 404 error page
+
+sudo apt-get update
+sudo apt-get install -y nginx
+
+# Create the custom 404 error page
+sudo mkdir -p /var/www/html/errors
+sudo echo "Ceci n'est pas une page" > /var/www/html/errors/404.html
+
+# Create a new Nginx configuration file
+sudo cat << EOF > /etc/nginx/sites-available/default
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.html index.htm;
+
+    server_name _;
+
+    error_page 404 /errors/404.html;
+
+    location = /errors/404.html {
+        internal;
+    }
+}
+EOF
+
+sudo rm /etc/nginx/sites-enabled/default
+sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+
+sudo service nginx restart
