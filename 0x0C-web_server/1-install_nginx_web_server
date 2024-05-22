@@ -16,3 +16,5 @@ sudo ufw allow 80/tcp
 sudo ufw enable
 #Verify your setup by silently curling the web page
 curl -s http://localhost | grep "Hello World!"
+# Restart your server
+sudo service nginx restart
