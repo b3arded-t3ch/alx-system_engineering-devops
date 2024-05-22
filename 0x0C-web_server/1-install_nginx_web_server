@@ -1,6 +1,18 @@
 #!/usr/bin/env bash
 # script to install and setup nginx
-apt-get -y update
-apt-get -y install nginx
-echo 'Hello World!' > /usr/share/nginx/html/index.html
-service nginx start
+# Update your system
+sudo apt-get update -y
+# Then install nginx
+sudo apt-get install nginx -y
+# open your web directory and create an index.html file
+# Ensure Nginx is configured to listen on port 80 (default setting)
+# Create the index.html file with "Hello World!" content
+echo -e "Hello World!" | sudo tee /var/www/index.html
+# Start your server using "service"
+sudo service nginx start
+# Allow port 80
+sudo ufw allow 80/tcp
+# Enable firewall
+sudo ufw enable
+#Verify your setup by silently curling the web page
+curl -s http://localhost | grep "Hello World!"
