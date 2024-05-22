@@ -1,37 +1,21 @@
 #!/usr/bin/env bash
-# Configures a new ubuntu machine by installing
-# Nginx where it should be listening on port 80
-# Serve a page that would return a Hello World string
-#
-
-
-echo -e "Updating and installing Nginx.\n"
-sudo apt-get update -y -qq && \
-         sudo apt-get install nginx -y
-
-echo -e "\nSetting up some minor stuff.\n"
-
-# starting nginx service
+# script to install and setup nginx
+# Update your system
+sudo apt-get update -y
+# Then install nginx
+sudo apt-get install nginx -y
+# open your web directory and create an index.html file
+# Ensure Nginx is configured to listen on port 80 (default setting)
+# Create the index.html file with "Hello World!" content
+echo -e "Hello World!" | sudo tee /var/www/index.html
+# Start your server using "service"
 sudo service nginx start
-
-# allowing nginx on firewall
-sudo ufw allow 'Nginx HTTP'
-
-# Give the user ownership to website files for easy editing
-sudo chown -R "$USER":"$USER" /var/www/html
-sudo chmod -R 755 /var/www
-
-# Backup default index
-cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
-
-# Creating new index
-echo -e "Hello World!" > /var/www/html/index.nginx-debian.html
-
-# Setting up /redirect_me to a youtube video
-sudo sed -i '24i\       rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default
-
-# Restarting nginx
+# Allow port 80
+sudo ufw allow 80/tcp
+# Enable firewall
+sudo ufw enable
+#Verify your setup by silently curling the web page
+curl -s http://localhost | grep "Hello World!"
+sudo sed -i '/location \/ {/a \\\tlocation \/redirect_me {\n\t\treturn 301 http:\/\/www.example.com\/;\n\t}' /etc/nginx/sites-available/default
+# Restart your server
 sudo service nginx restart
-
-echo -e "\nCompleted.\n"
-
