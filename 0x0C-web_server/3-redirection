@@ -16,6 +16,20 @@ sudo ufw allow 80/tcp
 sudo ufw enable
 #Verify your setup by silently curling the web page
 curl -s http://localhost | grep "Hello World!"
-sudo sed -i '/location \/ {/a \\\tlocation \/redirect_me {\n\t\treturn 301 http:\/\/www.example.com\/;\n\t}' /etc/nginx/sites-available/default
+# Configure the redirection in the Nginx configuration file
+cat << EOF > /etc/nginx/sites-available/default
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root /var/www/html;
+    index index.html index.htm;
+
+    location /redirect_me {
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    }
+}
+EOF
+
 # Restart your server
 sudo service nginx restart
