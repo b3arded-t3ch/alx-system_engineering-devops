@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# This script sets up a container and serves a page
+
+# Get yourself a container by downloading the docker image
+sudo docker run -p 8080:80 -d -it holbertonschool/265-0
+
+# Get the container ID
+sudo docker ps
+
+# Now, access the container
+sudo docker exec -it c6c78e2a0529 /bin/bash
+
+# start the apache web server
+sudo service apache start
+
+# Write something on the web page
+echo "Hello Holberton" > /var/www/html/index.html
+
+# Restart your web server
+sudo service apache2 restart
